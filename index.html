@@ -415,40 +415,92 @@
     <div class="chart-wrap"><canvas id="chart-comp" height="100"></canvas></div>
   </div>
 
-  <!-- ESTRUTURA DE CUSTOS (Nexora Hub Mãe) -->
+  <!-- ESTRUTURA DE CUSTOS (Nexora Hub Mae) -->
   <div id="tab-estrutura" class="tab-content">
-    <div class="page-title">Estrutura de Custos — Nexora Hub <span class="saving" id="saving-estr">💾 Salvando...</span></div>
-    <div class="page-sub">Custos gerais de manutenção da empresa mãe Nexora Hub (independentes das empresas filhas).</div>
-    <div class="info-box">🏗️ Estes são os custos centrais da <strong>Nexora Hub</strong> como holding. Os custos individuais de cada empresa filha são lançados nas páginas específicas de cada empresa.</div>
+    <div class="page-title">Estrutura de Custos — Nexora Hub <span class="saving" id="saving-estr">Salvando...</span></div>
+    <div class="page-sub">Custos gerais de manutencao da empresa mae Nexora Hub. Periodo operacional: <strong>01/04/2025</strong> em diante.</div>
+
     <div class="caixa-block">
       <div class="caixa-input-wrap">
-        <div class="caixa-label">💰 Caixa Inicial do Grupo (R$)</div>
-        <div class="caixa-desc">Saldo disponível no início do período (capital próprio + aportes)</div>
+        <div class="caixa-label">Caixa Inicial do Grupo (R$)</div>
+        <div class="caixa-desc">Saldo em 01/04/2025 (capital proprio)</div>
         <input class="caixa-inp" type="number" id="caixa-inicial" placeholder="Ex: 500000" oninput="saveEstrutura()" />
+      </div>
+      <div class="caixa-input-wrap">
+        <div class="caixa-label">Inicio da Operacao</div>
+        <div class="caixa-desc">Data de abertura do periodo</div>
+        <div style="color:#fff;font-family:sans-serif;font-size:20px;font-weight:700;padding:10px 14px;background:rgba(255,255,255,0.08);border-radius:8px;border:1px solid rgba(30,111,255,0.4);">01/04/2025</div>
       </div>
       <div class="caixa-cards" id="caixa-cards"></div>
     </div>
-    <div class="info-box">ℹ️ <strong>Caixa Atual</strong> = Caixa Inicial + Resultado Acumulado (lançamentos) − Custos de Estrutura Anuais</div>
+    <div class="info-box">Caixa Atual = Caixa Inicial + Aportes Acumulados + Resultado Acumulado - Custos de Estrutura Acumulados (Abr-Dez)</div>
+
+    <div class="section-title"><span>Aportes de Capital por Mes</span></div>
+    <p style="color:#6B7280;font-size:12px;margin:-8px 0 10px;">Entradas de capital externo. Meses Jan/Fev/Mar = pre-operacao (bloqueados).</p>
+    <div class="table-wrap" style="overflow-x:auto;margin-bottom:22px;">
+      <table style="min-width:900px;">
+        <thead><tr>
+          <th>Tipo</th>
+          <th style="color:rgba(255,255,255,0.4)">Jan</th><th style="color:rgba(255,255,255,0.4)">Fev</th><th style="color:rgba(255,255,255,0.4)">Mar</th>
+          <th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th>
+          <th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th>
+          <th>Total</th>
+        </tr></thead>
+        <tbody id="aportes-table"></tbody>
+      </table>
+    </div>
+
+    <div class="section-title"><span>Gestao de Custos Mes a Mes</span></div>
+    <p style="color:#6B7280;font-size:12px;margin:-8px 0 12px;">Coluna <strong>Base</strong> = valor padrao. Preencha o mes para sobrescrever. Fundo amarelo = valor personalizado. Jan/Fev/Mar = bloqueados.</p>
+    <div class="table-wrap" style="overflow-x:auto;margin-bottom:22px;">
+      <table style="min-width:1200px;">
+        <thead><tr>
+          <th>Categoria</th>
+          <th style="background:#1E3A5F;color:#7DD3FC;min-width:100px;">Base Mensal</th>
+          <th style="background:#1a1a2e;color:rgba(255,255,255,0.3);">Jan</th>
+          <th style="background:#1a1a2e;color:rgba(255,255,255,0.3);">Fev</th>
+          <th style="background:#1a1a2e;color:rgba(255,255,255,0.3);">Mar</th>
+          <th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th>
+          <th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th>
+          <th>Total Acum.</th>
+        </tr></thead>
+        <tbody id="custo-mensal-table"></tbody>
+        <tfoot><tr id="custo-mensal-total"></tr></tfoot>
+      </table>
+    </div>
+
     <div class="two-col">
       <div>
-        <div class="section-title"><span>Investimento Inicial — Onde foi gasto o capital?</span></div>
-        <p style="color:#6B7280;font-size:12px;margin:-8px 0 10px;">Gastos únicos de estruturação (não recorrentes).</p>
+        <div class="section-title"><span>Investimento Inicial</span></div>
+        <p style="color:#6B7280;font-size:12px;margin:-8px 0 10px;">Gastos unicos de estruturacao (nao recorrentes).</p>
         <div class="table-wrap">
           <table><thead><tr><th>Categoria</th><th>Valor Gasto (R$)</th></tr></thead>
           <tbody id="inv-table"></tbody></table>
         </div>
         <div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:8px;padding:9px 14px;margin-top:10px;font-size:11px;color:#92400E;">
-          ⚠️ O investimento inicial é apenas um registro histórico e não é deduzido automaticamente do caixa.
+          O investimento inicial e apenas um registro historico e nao e deduzido automaticamente do caixa.
         </div>
       </div>
       <div>
-        <div class="section-title"><span>Custos Mensais Fixos do Grupo</span></div>
-        <p style="color:#6B7280;font-size:12px;margin:-8px 0 10px;">Custos recorrentes da estrutura central (independentes das empresas filhas).</p>
-        <div class="table-wrap">
-          <table><thead><tr><th>Categoria</th><th>Custo/Mês (R$)</th></tr></thead>
-          <tbody id="custo-table"></tbody></table>
+        <div class="section-title"><span>Resumo Financeiro do Grupo</span></div>
+        <div class="kpi-grid" id="estr-summary-cards"></div>
+        <div style="background:#fff;border-radius:12px;border:1px solid #E5E7EB;padding:18px;margin-top:14px;">
+          <div style="font-family:sans-serif;font-weight:700;font-size:13px;margin-bottom:12px;color:#111827;">Metas Globais</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px;">Runway Minimo (meses)</label>
+              <input class="inp" type="number" id="meta-runway" value="6" oninput="saveEstrutura()" />
+            </div>
+            <div>
+              <label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px;">Margem Minima (ex: 0.15 = 15%)</label>
+              <input class="inp" type="number" step="0.01" id="meta-margem" value="0.15" oninput="saveEstrutura()" />
+            </div>
+            <div>
+              <label style="font-size:11px;color:#6B7280;font-weight:600;display:block;margin-bottom:4px;">Burn Rate Maximo (R$)</label>
+              <input class="inp" type="number" id="meta-burnrate" value="0" oninput="saveEstrutura()" />
+            </div>
+          </div>
         </div>
-        <div class="kpi-grid" style="margin-top:12px;" id="estr-summary-cards"></div>
       </div>
     </div>
   </div>
@@ -483,6 +535,11 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+// Período operacional: início em 01/04/2025
+const DATA_INICIO = { mes: 'Abr', idx: 3 };
+const MONTHS_OPERACIONAIS = MONTHS.slice(DATA_INICIO.idx); // Abr..Dez
+const MONTHS_PRE = MONTHS.slice(0, DATA_INICIO.idx);       // Jan, Fev, Mar
+function isMesOperacional(m) { return MONTHS.indexOf(m) >= DATA_INICIO.idx; }
 
 // ─── EMPRESAS ─────────────────────────────────────────────────────────────────
 // NEXORA HUB é a empresa mãe (holding) — custos na aba "Estrutura de Custos"
@@ -523,14 +580,17 @@ let lancamentos = {};
 let planejado = {};
 let estrutura = {
   caixa_inicial: 0,
+  data_inicio: '01/04/2025',
   investimento: Object.fromEntries(INV_CATS.map(k => [k, 0])),
   custos_mensais: Object.fromEntries(CUSTO_CATS.map(k => [k, 0])),
+  custos_por_mes: {},
+  aportes: Object.fromEntries(['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'].map(m => [m, 0])),
   metas: { runway: 6, margem: 0.15, burnRateMax: 0 }
 };
 let estrutura_id = null;
-let selMonth = 'Jan';
+let selMonth = 'Abr';
 let selCompany = 'nexora_hub';
-let selPlanMonth = 'Jan';
+let selPlanMonth = 'Abr';
 let saveTimer = null;
 let chartPainel = null, chartPainelEmpresas = null, chartDash = null, chartComp = null;
 let currentEmpresaId = null;
@@ -554,6 +614,17 @@ function calcResP(p) {
 }
 function calcCustos(e) {
   return (e.custos_diretos||0)+(e.folha||0)+(e.impostos||0)+(e.despesas_adm||0)+(e.outras_despesas||0);
+}
+function getCustoMes(mes, cat) {
+  const override = estrutura.custos_por_mes?.[mes]?.[cat];
+  if (override !== undefined && override !== null && override !== '') return parseFloat(override)||0;
+  return estrutura.custos_mensais[cat]||0;
+}
+function getTotalCustoMes(mes) {
+  return ['Programador','Designer','Operador','Encargos/Benefícios','Servidor/Hospedagem','Ferramentas Design','Ferramentas Tech','Atendimento/CRM','Contabilidade','Jurídico','Tráfego/Ads','Outros Custos'].reduce((a,k)=>a+getCustoMes(mes,k),0);
+}
+function getTotalAportes() {
+  return ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'].reduce((a,m)=>a+(estrutura.aportes?.[m]||0),0);
 }
 function getStatus(real, plan, invert=false) {
   if (!plan || plan===0) return 'SEM DADOS';
@@ -610,16 +681,19 @@ function getEmpresaYTD(cid) {
 }
 function getTotals() {
   const totalCusto = CUSTO_CATS.reduce((a,k)=>a+(estrutura.custos_mensais[k]||0),0);
+  const MONTHS_OP = ['Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const totalCustoAcum = MONTHS_OP.reduce((a,m)=>a+getTotalCustoMes(m),0);
   const totalInv = INV_CATS.reduce((a,k)=>a+(estrutura.investimento[k]||0),0);
   const cons = getConsolidado();
   const resultadoAcum = cons.reduce((a,c)=>a+c.resultado,0);
+  const totalAportes = getTotalAportes();
   const caixaInicial = estrutura.caixa_inicial||0;
-  const caixaAtual = caixaInicial + resultadoAcum - (totalCusto*12);
-  const burnRate = cons.reduce((a,c)=>c.resultado<0?a+Math.abs(c.resultado):a,0)/12;
+  const caixaAtual = caixaInicial + totalAportes + resultadoAcum - totalCustoAcum;
+  const burnRate = cons.reduce((a,c)=>c.resultado<0?a+Math.abs(c.resultado):a,0)/MONTHS_OP.length;
   const runway = burnRate>0?caixaAtual/burnRate:0;
   const ytd = getYTD(cons);
   const margem = ytd.receita>0?ytd.resultado/ytd.receita:0;
-  return {totalCusto,totalInv,resultadoAcum,caixaInicial,caixaAtual,burnRate,runway,ytd,margem};
+  return {totalCusto,totalCustoAcum,totalInv,resultadoAcum,caixaInicial,caixaAtual,burnRate,runway,ytd,margem,totalAportes};
 }
 
 // ─── TOAST ───────────────────────────────────────────────────────────────────
@@ -671,8 +745,11 @@ async function saveEstrutura() {
     estrutura.caixa_inicial = caixa_inicial;
     const payload = {
       caixa_inicial,
+      data_inicio: '01/04/2025',
       investimento: estrutura.investimento,
       custos_mensais: estrutura.custos_mensais,
+      custos_por_mes: estrutura.custos_por_mes,
+      aportes: estrutura.aportes,
       metas,
       updated_at: new Date().toISOString()
     };
@@ -702,6 +779,12 @@ async function loadAll() {
     estrutura.investimento = eData.investimento||estrutura.investimento;
     estrutura.custos_mensais = eData.custos_mensais||estrutura.custos_mensais;
     estrutura.metas = eData.metas||estrutura.metas;
+    if (eData.custos_por_mes) {
+      estrutura.custos_por_mes = eData.custos_por_mes;
+    }
+    if (eData.aportes) {
+      estrutura.aportes = eData.aportes;
+    }
   }
 }
 
@@ -1059,22 +1142,92 @@ function renderComparativo(cons, ytd, companiesYTD) {
 
 // ─── ESTRUTURA ───────────────────────────────────────────────────────────────
 function renderEstrutura(totals) {
-  const { caixaAtual, resultadoAcum, totalCusto, totalInv } = totals;
+  const { caixaAtual, resultadoAcum, totalCusto, totalCustoAcum, totalInv, totalAportes } = totals;
   const ci = estrutura.caixa_inicial||0;
+  const MONTHS_ALL = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const MONTHS_OP = ['Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
   const ciEl = document.getElementById('caixa-inicial');
   if (ciEl && document.activeElement!==ciEl) ciEl.value = ci||'';
 
+  const mt = estrutura.metas;
+  const ri=document.getElementById('meta-runway'), mi=document.getElementById('meta-margem'), bi=document.getElementById('meta-burnrate');
+  if(ri&&document.activeElement!==ri) ri.value=mt.runway||6;
+  if(mi&&document.activeElement!==mi) mi.value=mt.margem||0.15;
+  if(bi&&document.activeElement!==bi) bi.value=mt.burnRateMax||0;
+
   document.getElementById('caixa-cards').innerHTML = [
-    {label:'Caixa Inicial', val:fmt(ci), color:'#1E6FFF'},
+    {label:'Caixa Inicial (01/04)', val:fmt(ci), color:'#1E6FFF'},
+    {label:'Aportes Acumulados', val:fmt(totalAportes), color:'#8B5CF6'},
     {label:'Resultado Acumulado', val:fmt(resultadoAcum), color:resultadoAcum>=0?'#10B981':'#EF4444'},
-    {label:'Custos Estrutura (ano)', val:fmt(totalCusto*12), color:'#F59E0B'},
+    {label:'Custos Estrutura Acum.', val:fmt(totalCustoAcum), color:'#F59E0B'},
     {label:'Caixa Atual Estimado', val:fmt(caixaAtual), color:caixaAtual>=0?'#10B981':'#EF4444'},
   ].map(({label,val,color})=>`
     <div class="caixa-mini" style="border-left:3px solid ${color}">
       <div class="caixa-mini-label">${label}</div>
       <div class="caixa-mini-val" style="color:${color}">${val}</div>
     </div>`).join('');
+
+  // Tabela de aportes
+  let aportesAccum = 0;
+  document.getElementById('aportes-table').innerHTML =
+    `<tr><td><strong>Aporte (R$)</strong></td>` +
+    MONTHS_ALL.map(mm=>{
+      const isOp = MONTHS_OP.includes(mm);
+      const val = estrutura.aportes?.[mm]||'';
+      return `<td style="padding:4px 6px;background:${isOp?'':'#F9FAFB'}">
+        <input class="inp" type="number" value="${val}" style="width:80px;${isOp?'':'background:#F3F4F6;color:#9CA3AF;'}"
+          ${isOp?`oninput="estrutura.aportes['${mm}']=parseFloat(this.value)||0;saveEstrutura()"`:' disabled'}
+        /></td>`;
+    }).join('') +
+    `<td style="font-weight:700;color:#8B5CF6">${fmt(MONTHS_ALL.reduce((a,mm)=>a+(estrutura.aportes?.[mm]||0),0))}</td></tr>` +
+    `<tr style="background:#F0FDF4"><td style="color:#059669;font-weight:600">Acumulado</td>` +
+    MONTHS_ALL.map(mm=>{
+      aportesAccum += (estrutura.aportes?.[mm]||0);
+      const isOp = MONTHS_OP.includes(mm);
+      return `<td style="color:${isOp?'#059669':'#9CA3AF'};font-weight:600">${fmt(aportesAccum)}</td>`;
+    }).join('') +
+    `<td></td></tr>`;
+
+  // Tabela de custos mes a mes
+  const custosRows = CUSTO_CATS.map((cat,rIdx)=>{
+    const base = estrutura.custos_mensais[cat]||0;
+    const totalAcumCat = MONTHS_OP.reduce((a,mm)=>a+getCustoMes(mm,cat),0);
+    return `<tr style="background:${rIdx%2===0?'#FAFAFA':'#fff'}">
+      <td style="font-weight:500">${cat}</td>
+      <td style="padding:4px 8px;background:#EFF6FF;">
+        <input class="inp" type="number" value="${base||''}" style="width:90px;background:#EFF6FF;"
+          oninput="estrutura.custos_mensais['${cat}']=parseFloat(this.value)||0;saveEstrutura()" />
+      </td>` +
+      MONTHS_ALL.map(mm=>{
+        const isOp = MONTHS_OP.includes(mm);
+        const override = estrutura.custos_por_mes?.[mm]?.[cat];
+        const hasOverride = override !== undefined && override !== null && override !== '';
+        const displayVal = hasOverride ? override : '';
+        return `<td style="padding:4px 6px;background:${!isOp?'#F3F4F6':(hasOverride?'#FFFBEB':'')}">
+          <input class="inp" type="number" value="${displayVal}" placeholder="${isOp?base:''}"
+            style="width:80px;${!isOp?'background:#F3F4F6;color:#9CA3AF;':(hasOverride?'background:#FFFBEB;border-color:#F59E0B;':'')}"
+            ${isOp?`oninput="updateCustoMes('${mm}','${cat}',this.value)"`:' disabled'}
+          /></td>`;
+      }).join('') +
+      `<td style="font-weight:700;color:#F59E0B">${fmt(totalAcumCat)}</td>
+    </tr>`;
+  }).join('');
+
+  const totalBase = CUSTO_CATS.reduce((a,k)=>a+(estrutura.custos_mensais[k]||0),0);
+  const totalPorMes = MONTHS_ALL.map(mm=>MONTHS_OP.includes(mm)?getTotalCustoMes(mm):0);
+  const totalAcumGeral = totalPorMes.reduce((a,v)=>a+v,0);
+
+  document.getElementById('custo-mensal-table').innerHTML = custosRows;
+  document.getElementById('custo-mensal-total').innerHTML =
+    `<td style="background:#0A1628;color:#fff;font-weight:700;padding:8px 12px;">TOTAL</td>` +
+    `<td style="background:#1E3A5F;color:#7DD3FC;font-weight:700;padding:8px 12px;">${fmt(totalBase)}</td>` +
+    MONTHS_ALL.map((mm,i)=>{
+      const isOp = MONTHS_OP.includes(mm);
+      const v = totalPorMes[i];
+      return `<td style="background:${isOp?'#0A1628':'#1a1a2e'};color:${isOp?'#1E6FFF':'rgba(255,255,255,0.2)'};font-weight:700;padding:8px 12px;">${isOp?fmt(v):'—'}</td>`;
+    }).join('') +
+    `<td style="background:#0A1628;color:#F59E0B;font-weight:700;padding:8px 12px;">${fmt(totalAcumGeral)}</td>`;
 
   document.getElementById('inv-table').innerHTML = INV_CATS.map((k,i)=>`
     <tr style="background:${i%2===0?'#FAFAFA':'#fff'}">
@@ -1084,20 +1237,26 @@ function renderEstrutura(totals) {
     </tr>`).join('') +
     `<tr class="table-total"><td>TOTAL INVESTIDO</td><td>${fmt(totalInv)}</td></tr>`;
 
-  document.getElementById('custo-table').innerHTML = CUSTO_CATS.map((k,i)=>`
-    <tr style="background:${i%2===0?'#FAFAFA':'#fff'}">
-      <td>${k}</td>
-      <td style="padding:5px 8px"><input class="inp" type="number" value="${estrutura.custos_mensais[k]||''}"
-        oninput="estrutura.custos_mensais['${k}']=parseFloat(this.value)||0;saveEstrutura()" /></td>
-    </tr>`).join('') +
-    `<tr class="table-total"><td>TOTAL MENSAL</td><td>${fmt(totalCusto)}</td></tr>`;
-
-  const rwSemReceita = totalCusto>0?`${fmtNum(ci/totalCusto)} m`:'∞';
+  const rwSemReceita = totalBase>0?`${fmtNum(ci/totalBase)} m`:'∞';
   document.getElementById('estr-summary-cards').innerHTML = [
-    kpiCard('Custo Mensal', fmt(totalCusto), '', '#F59E0B'),
-    kpiCard('Custo Anual', fmt(totalCusto*12), '', '#EF4444'),
-    kpiCard('Runway s/ receita', rwSemReceita, 'só com custo fixo', '#1E6FFF'),
+    kpiCard('Caixa Inicial', fmt(ci), '01/04/2025', '#1E6FFF'),
+    kpiCard('Aportes Acumulados', fmt(totalAportes), 'capital externo', '#8B5CF6'),
+    kpiCard('Custo Base Mensal', fmt(totalBase), 'estrutura central', '#F59E0B'),
+    kpiCard('Custo Acumulado', fmt(totalCustoAcum), 'Abr-Dez', '#EF4444'),
+    kpiCard('Caixa Atual', fmt(caixaAtual), '', caixaAtual>=0?'#10B981':'#EF4444'),
+    kpiCard('Runway', `${fmtNum(totals.runway)} m`, 'so custo fixo', '#1E6FFF'),
   ].join('');
+}
+
+function updateCustoMes(mes, cat, val) {
+  if (!estrutura.custos_por_mes) estrutura.custos_por_mes = {};
+  if (!estrutura.custos_por_mes[mes]) estrutura.custos_por_mes[mes] = {};
+  if (val === '' || val === null || val === undefined) {
+    delete estrutura.custos_por_mes[mes][cat];
+  } else {
+    estrutura.custos_por_mes[mes][cat] = parseFloat(val)||0;
+  }
+  saveEstrutura();
 }
 
 // ─── VISÃO GERAL EMPRESAS FILHAS ─────────────────────────────────────────────
