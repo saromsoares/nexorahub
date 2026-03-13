@@ -545,17 +545,17 @@ function isMesOperacional(m) { return MONTHS.indexOf(m) >= DATA_INICIO.idx; }
 // NEXORA HUB é a empresa mãe (holding) — custos na aba "Estrutura de Custos"
 // Empresas filhas: todas as demais
 const COMPANIES = [
-  { id:'nexora_hub',           name:'Nexora Hub',             color:'#1E6FFF', emoji:'🏦', segmento:'Holding / Fintech',       isMae: true  },
-  { id:'priva_br',             name:'Priva BR',               color:'#6366F1', emoji:'🔒', segmento:'Privacidade & Dados',      isMae: false },
-  { id:'festa_play',           name:'Festa Play',             color:'#EC4899', emoji:'🎉', segmento:'Entretenimento & Eventos', isMae: false },
-  { id:'perrengue_aereo',      name:'Perrengue Aéreo',        color:'#0EA5E9', emoji:'✈️', segmento:'Viagens & Aviação',        isMae: false },
-  { id:'perrengue_saude',      name:'Perrengue Saúde',        color:'#10B981', emoji:'🏥', segmento:'Saúde & Bem-estar',        isMae: false },
-  { id:'perrengue_consumidor', name:'Perrengue Consumidor',   color:'#F59E0B', emoji:'⚖️', segmento:'Defesa do Consumidor',     isMae: false },
-  { id:'criativo_pronto',      name:'Criativo Pronto',        color:'#8B5CF6', emoji:'🎨', segmento:'Marketing & Criatividade', isMae: false },
-  { id:'liga_da_rotina',       name:'Liga da Rotina',         color:'#EAB308', emoji:'📅', segmento:'Produtividade & Rotina',   isMae: false },
-  { id:'axiom_laudos',         name:'Axiom Laudos',           color:'#06B6D4', emoji:'📋', segmento:'Laudos & Perícia',         isMae: false },
-  { id:'raio_x_do_lucro',      name:'Raio X do Lucro',        color:'#EF4444', emoji:'💡', segmento:'Análise Financeira',       isMae: false },
-  { id:'nexus_horizon',        name:'Nexus Horizon',          color:'#14B8A6', emoji:'🌐', segmento:'Expansão & Estratégia',    isMae: false },
+  { id:'nexora_hub',           name:'Nexora Hub',             color:'#1E6FFF', emoji:'🏦', segmento:'Holding / Fintech',       isMae: true,  website:'' },
+  { id:'priva_br',             name:'Priva BR',               color:'#6366F1', emoji:'🔒', segmento:'Privacidade & Dados',      isMae: false, website:'https://www.privabr.com.br/' },
+  { id:'festa_play',           name:'Festa Play',             color:'#EC4899', emoji:'🎉', segmento:'Entretenimento & Eventos', isMae: false, website:'https://festanoplay.com/' },
+  { id:'perrengue_aereo',      name:'Perrengue Aéreo',        color:'#0EA5E9', emoji:'✈️', segmento:'Viagens & Aviação',        isMae: false, website:'' },
+  { id:'perrengue_saude',      name:'Perrengue Saúde',        color:'#10B981', emoji:'🏥', segmento:'Saúde & Bem-estar',        isMae: false, website:'' },
+  { id:'perrengue_consumidor', name:'Perrengue Consumidor',   color:'#F59E0B', emoji:'⚖️', segmento:'Defesa do Consumidor',     isMae: false, website:'' },
+  { id:'criativo_pronto',      name:'Criativo Pronto',        color:'#8B5CF6', emoji:'🎨', segmento:'Marketing & Criatividade', isMae: false, website:'https://criativopronto.com.br/' },
+  { id:'liga_da_rotina',       name:'Liga da Rotina',         color:'#EAB308', emoji:'📅', segmento:'Produtividade & Rotina',   isMae: false, website:'' },
+  { id:'axiom_laudos',         name:'Axiom Laudos',           color:'#06B6D4', emoji:'📋', segmento:'Laudos & Perícia',         isMae: false, website:'' },
+  { id:'raio_x_do_lucro',      name:'Raio X do Lucro',        color:'#EF4444', emoji:'💡', segmento:'Análise Financeira',       isMae: false, website:'' },
+  { id:'nexus_horizon',        name:'Nexus Horizon',          color:'#14B8A6', emoji:'🌐', segmento:'Expansão & Estratégia',    isMae: false, website:'' },
 ];
 
 const FILHAS = COMPANIES.filter(c => !c.isMae);
@@ -1266,7 +1266,8 @@ function renderEmpresasGeral(companiesYTD) {
   // Cards
   document.getElementById('empresas-cards-grid').innerHTML = filhasYTD.map(c => {
     const margem = c.receita > 0 ? c.resultado / c.receita : 0;
-    return `<div class="empresa-card" style="border-left-color:${c.color}" onclick="showEmpresaIndividual('${c.id}')">
+    const comp = COMPANIES.find(x => x.id === c.id);
+    return `<div class="empresa-card" style="border-left-color:${c.color}; cursor:pointer" onclick="showEmpresaIndividual('${c.id}')">
       <div class="empresa-card-header">
         <div class="empresa-card-icon" style="background:${c.color}22;color:${c.color}">${c.emoji}</div>
         <div>
@@ -1292,6 +1293,14 @@ function renderEmpresasGeral(companiesYTD) {
           <div>${badgeHtml(c.status)}</div>
         </div>
       </div>
+      ${comp && comp.website ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #F3F4F6;">
+        <a href="${comp.website}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+          style="display:inline-flex;align-items:center;gap:5px;color:${c.color};font-size:11px;font-weight:600;
+          text-decoration:none;background:${c.color}11;border:1px solid ${c.color}33;border-radius:20px;padding:3px 10px;"
+          onmouseover="this.style.background='${c.color}22'" onmouseout="this.style.background='${c.color}11'">
+          🌐 ${comp.website.replace('https://','').replace('http://','').replace(/\/$/,'')}
+        </a>
+      </div>` : ''}
     </div>`;
   }).join('');
 
@@ -1353,6 +1362,20 @@ function renderEmpresaIndividual(cid) {
       <div class="empresa-header-info">
         <div class="empresa-header-name">${comp.name}</div>
         <div class="empresa-header-sub">${comp.segmento} · Empresa Filha da Nexora Hub</div>
+        ${comp.website ? `<a href="${comp.website}" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:5px;margin-top:5px;color:rgba(255,255,255,0.9);
+          background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;
+          padding:3px 10px;font-size:11px;font-weight:600;text-decoration:none;transition:all 0.2s;"
+          onmouseover="this.style.background='rgba(255,255,255,0.25)'"
+          onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+          🌐 ${comp.website.replace('https://','').replace('http://','').replace(/\/$/,'')}
+        </a>` : `<div style="margin-top:5px;">
+          <input type="url" placeholder="Adicionar site da empresa..." value=""
+            style="background:rgba(255,255,255,0.1);border:1px dashed rgba(255,255,255,0.3);border-radius:20px;
+            padding:3px 10px;font-size:11px;color:rgba(255,255,255,0.7);outline:none;width:220px;"
+            onchange="updateCompanyWebsite('${comp.id}', this.value)"
+          />
+        </div>`}
       </div>
       <div class="empresa-header-kpis">
         <div class="empresa-header-kpi">
@@ -1550,6 +1573,15 @@ function showTab(name, btn) {
   document.getElementById(`tab-${name}`).classList.add('active');
   if (btn) btn.classList.add('active');
   else if (event && event.target) event.target.classList.add('active');
+}
+
+// ─── WEBSITE EMPRESA ─────────────────────────────────────────────────────────
+function updateCompanyWebsite(cid, url) {
+  const comp = COMPANIES.find(c => c.id === cid);
+  if (!comp) return;
+  comp.website = url.trim();
+  // Re-renderizar o header
+  renderEmpresaIndividual(cid);
 }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
