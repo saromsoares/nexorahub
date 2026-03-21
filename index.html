@@ -118,13 +118,72 @@ nav.scrolled {
   animation: pulse 2s ease-in-out infinite;
 }
 @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,229,255,0.4); } 50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(0,229,255,0); } }
-.hero-logo {
-  width: 100px; height: 100px; border-radius: 20px;
-  object-fit: contain; margin-bottom: 40px;
-  filter: drop-shadow(0 0 60px rgba(0,229,255,0.3));
-  animation: float 6s ease-in-out infinite;
+.hero-logo-wrap {
+  position: relative; margin-bottom: 48px;
 }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.hero-logo-wrap::before {
+  content: ''; position: absolute; inset: -30px;
+  background: radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 70%);
+  border-radius: 50%; animation: logoPulse 4s ease-in-out infinite; pointer-events: none;
+}
+@keyframes logoPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.6; } }
+.hero-logo {
+  width: clamp(200px, 30vw, 340px); height: auto;
+  object-fit: contain; position: relative; z-index: 1;
+  filter: drop-shadow(0 0 80px rgba(0,229,255,0.35));
+  animation: float 6s ease-in-out infinite;
+  border-radius: 0;
+  mix-blend-mode: lighten;
+}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+
+/* ─── TECH DECORATION ELEMENTS ─── */
+.tech-lines {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.circuit-line {
+  position: absolute; background: rgba(0,229,255,0.04);
+}
+.circuit-line.h { height: 1px; }
+.circuit-line.v { width: 1px; }
+.circuit-dot {
+  position: absolute; width: 4px; height: 4px; border-radius: 50%;
+  background: var(--cyan); opacity: 0;
+  animation: circuitPulse 3s ease-in-out infinite;
+}
+@keyframes circuitPulse { 0%, 100% { opacity: 0; } 50% { opacity: 0.3; } }
+.hex-pattern {
+  position: absolute; opacity: 0.02; pointer-events: none;
+}
+.floating-code {
+  position: fixed; color: rgba(0,229,255,0.06); font-family: 'Courier New', monospace;
+  font-size: 11px; white-space: nowrap; pointer-events: none; z-index: 0;
+  animation: codeFloat 20s linear infinite;
+}
+@keyframes codeFloat { 0% { transform: translateY(100vh); } 100% { transform: translateY(-100vh); } }
+.tech-bracket {
+  position: absolute; pointer-events: none; z-index: 0;
+}
+.tech-bracket svg { opacity: 0.06; }
+
+/* section decorators */
+.section-decorator {
+  position: absolute; pointer-events: none; opacity: 0.04;
+}
+.section-decorator svg { width: 100%; height: 100%; }
+
+/* binary strip */
+.binary-strip {
+  overflow: hidden; white-space: nowrap;
+  font-family: 'Courier New', monospace; font-size: 10px;
+  color: rgba(0,229,255,0.06); letter-spacing: 2px;
+  padding: 8px 0; position: relative; z-index: 1;
+}
+.binary-strip span {
+  display: inline-block; animation: binaryScroll 30s linear infinite;
+}
+@keyframes binaryScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .hero h1 {
   font-family: 'Sora', sans-serif; font-weight: 800;
   font-size: clamp(40px, 6vw, 76px); line-height: 1.05;
@@ -378,6 +437,19 @@ footer {
 <!-- ANIMATED GRID BACKGROUND -->
 <div class="grid-bg"><canvas id="gridCanvas"></canvas></div>
 
+<!-- TECH DECORATIVE ELEMENTS -->
+<div class="tech-lines">
+  <!-- Floating code snippets -->
+  <div class="floating-code" style="left:3%; animation-delay:0s;">const hub = new ArcadeHub({ empresas: 9, status: 'active' });</div>
+  <div class="floating-code" style="left:15%; animation-delay:-5s;">async function deploy(empresa) { await empresa.launch(); }</div>
+  <div class="floating-code" style="left:72%; animation-delay:-10s;">export interface Ecosystem { companies: Company[]; }</div>
+  <div class="floating-code" style="left:85%; animation-delay:-15s;">hub.scale({ target: 'nationwide', auto: true });</div>
+  <div class="floating-code" style="left:40%; animation-delay:-8s;">return { innovation: true, impact: 'real' };</div>
+  <div class="floating-code" style="left:55%; animation-delay:-3s;">const result = await solve(problem).then(optimize);</div>
+  <div class="floating-code" style="left:28%; animation-delay:-12s;">pipeline.execute([ build, test, deploy, monitor ]);</div>
+  <div class="floating-code" style="left:92%; animation-delay:-18s;">type Status = 'active' | 'building' | 'launching';</div>
+</div>
+
 <!-- NAV -->
 <nav id="navbar">
   <a href="#" class="nav-brand">ARCADE <span>HUB</span></a>
@@ -393,7 +465,9 @@ footer {
 <!-- HERO -->
 <section class="hero" id="hero">
   <div class="hero-badge"><span class="pulse"></span> Ecossistema ativo</div>
-  <img src="logo.png" alt="Arcade Hub" class="hero-logo" loading="eager" />
+  <div class="hero-logo-wrap">
+    <img src="logo.png" alt="Arcade Hub" class="hero-logo" loading="eager" />
+  </div>
   <h1>Onde tecnologia<br>encontra <span class="gradient-text">proposito</span>.</h1>
   <p class="hero-sub">Construimos empresas de tecnologia que resolvem problemas reais. Privacidade, saude, direito do consumidor, entretenimento e inteligencia financeira — tudo sob um ecossistema.</p>
   <div class="hero-ctas">
@@ -424,8 +498,24 @@ footer {
   </div>
 </div>
 
+<!-- BINARY STRIP -->
+<div class="binary-strip"><span>01001000 01010101 01000010 &nbsp; ARCADE.HUB.TECH &nbsp; 01010100 01000101 01000011 01001000 &nbsp; INOVACAO &nbsp; 01010011 01001111 01001100 &nbsp; TECNOLOGIA &nbsp; 01001000 01010101 01000010 &nbsp; ARCADE.HUB.TECH &nbsp; 01010100 01000101 01000011 01001000 &nbsp; INOVACAO &nbsp; 01010011 01001111 01001100 &nbsp; TECNOLOGIA &nbsp; 01001000 01010101 01000010 &nbsp; ARCADE.HUB.TECH &nbsp; 01010100 01000101 01000011 01001000 &nbsp; INOVACAO &nbsp; 01010011 01001111 01001100 &nbsp; TECNOLOGIA &nbsp;</span></div>
+
 <!-- EMPRESAS -->
-<section class="content-section" id="empresas">
+<section class="content-section" id="empresas" style="position:relative; overflow:hidden;">
+  <!-- Tech decorator: data flow -->
+  <div class="section-decorator" style="top:20px;right:-30px;width:200px;height:400px;">
+    <svg viewBox="0 0 100 200" fill="none" stroke="rgba(0,229,255,1)" stroke-width="0.4">
+      <path d="M50 0 L50 30 L80 50 L80 80 L50 100 L50 130 L20 150 L20 180 L50 200" stroke-dasharray="4 4"/>
+      <circle cx="50" cy="30" r="2.5" fill="rgba(0,229,255,1)"/>
+      <circle cx="80" cy="50" r="2.5" fill="rgba(0,229,255,1)"/>
+      <circle cx="80" cy="80" r="2.5" fill="rgba(0,229,255,1)"/>
+      <circle cx="50" cy="100" r="2.5" fill="rgba(0,229,255,1)"/>
+      <circle cx="50" cy="130" r="2.5" fill="rgba(0,229,255,1)"/>
+      <circle cx="20" cy="150" r="2.5" fill="rgba(0,229,255,1)"/>
+      <circle cx="20" cy="180" r="2.5" fill="rgba(0,229,255,1)"/>
+    </svg>
+  </div>
   <div class="section-tag">Portfolio</div>
   <h2 class="section-heading">Nossas empresas</h2>
   <p class="section-sub">Cada empresa foi construida para dominar um problema especifico. Todas conectadas pela mesma infraestrutura tecnologica.</p>
@@ -553,7 +643,29 @@ footer {
 </section>
 
 <!-- SOBRE -->
-<section class="content-section" id="sobre">
+<section class="content-section" id="sobre" style="position:relative; overflow:hidden;">
+  <!-- Tech decorator: circuit pattern -->
+  <div class="section-decorator" style="top:-40px;right:-60px;width:300px;height:300px;">
+    <svg viewBox="0 0 200 200" fill="none" stroke="rgba(0,229,255,1)" stroke-width="0.5">
+      <path d="M100 20 L100 60 M100 60 L140 60 L140 100 M100 60 L60 60 L60 100 M60 100 L60 140 L100 140 M140 100 L140 140 L100 140 M100 140 L100 180"/>
+      <circle cx="100" cy="20" r="3" fill="rgba(0,229,255,1)"/>
+      <circle cx="140" cy="60" r="3" fill="rgba(0,229,255,1)"/>
+      <circle cx="60" cy="60" r="3" fill="rgba(0,229,255,1)"/>
+      <circle cx="60" cy="100" r="3" fill="rgba(0,229,255,1)"/>
+      <circle cx="140" cy="100" r="3" fill="rgba(0,229,255,1)"/>
+      <circle cx="100" cy="140" r="3" fill="rgba(0,229,255,1)"/>
+      <circle cx="100" cy="180" r="3" fill="rgba(0,229,255,1)"/>
+      <rect x="85" y="85" width="30" height="30" rx="4"/>
+    </svg>
+  </div>
+  <!-- Tech decorator: hexagon grid -->
+  <div class="section-decorator" style="bottom:-20px;left:-40px;width:250px;height:250px;">
+    <svg viewBox="0 0 200 200" fill="none" stroke="rgba(0,229,255,1)" stroke-width="0.3">
+      <polygon points="100,10 170,45 170,115 100,150 30,115 30,45"/>
+      <polygon points="100,30 155,55 155,105 100,130 45,105 45,55"/>
+      <polygon points="100,50 140,65 140,95 100,110 60,95 60,65"/>
+    </svg>
+  </div>
   <div class="section-tag">Quem somos</div>
   <h2 class="section-heading">Sobre a Arcade Hub</h2>
   <div class="about-grid">
@@ -589,7 +701,21 @@ footer {
 </section>
 
 <!-- CTA FINAL -->
-<section class="cta-section" id="contato">
+<section class="cta-section" id="contato" style="position:relative; overflow:hidden;">
+  <!-- rotating tech ring -->
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;pointer-events:none;opacity:0.03;">
+    <svg viewBox="0 0 500 500" fill="none" stroke="rgba(0,229,255,1)" stroke-width="0.8" style="animation: spin 60s linear infinite;">
+      <circle cx="250" cy="250" r="200" stroke-dasharray="10 5"/>
+      <circle cx="250" cy="250" r="220" stroke-dasharray="3 8"/>
+      <circle cx="250" cy="250" r="180" stroke-dasharray="20 10"/>
+    </svg>
+  </div>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:400px;pointer-events:none;opacity:0.03;">
+    <svg viewBox="0 0 400 400" fill="none" stroke="rgba(0,229,255,1)" stroke-width="0.5" style="animation: spin 45s linear infinite reverse;">
+      <polygon points="200,20 380,200 200,380 20,200"/>
+      <polygon points="200,60 340,200 200,340 60,200"/>
+    </svg>
+  </div>
   <h2>Quer conhecer o ecossistema<br>por dentro?</h2>
   <p>Seja para parcerias, investimentos ou curiosidade — estamos abertos a conversas que fazem sentido.</p>
   <div class="hero-ctas" style="position:relative;">
