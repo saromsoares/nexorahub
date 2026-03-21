@@ -277,8 +277,52 @@
 </head>
 <body>
 
+<!-- LOGIN SCREEN -->
+<div id="login-screen" style="
+  position:fixed;inset:0;z-index:9999;
+  background:#050d1a;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+">
+  <div style="
+    background:rgba(15,31,56,0.6);backdrop-filter:blur(20px);
+    border:1px solid rgba(0,229,255,0.1);border-radius:20px;
+    padding:48px 40px;width:100%;max-width:420px;text-align:center;
+  ">
+    <img src="../logo.png" alt="Arcade Hub" style="width:80px;height:80px;object-fit:contain;margin-bottom:24px;filter:drop-shadow(0 0 30px rgba(0,229,255,0.3));" />
+    <h1 style="font-family:'Sora',sans-serif;font-weight:800;font-size:24px;color:#fff;margin-bottom:6px;letter-spacing:1px;">ARCADE <span style="color:#00E5FF;">HUB</span></h1>
+    <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:32px;">Painel Administrativo</p>
+
+    <div id="login-error" style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#EF4444;padding:10px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;"></div>
+
+    <input id="login-email" type="email" placeholder="Email" style="
+      width:100%;padding:14px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);
+      background:rgba(255,255,255,0.05);color:#fff;font-size:14px;font-family:'DM Sans',sans-serif;
+      margin-bottom:12px;outline:none;transition:border-color 0.3s;
+    " onfocus="this.style.borderColor='rgba(0,229,255,0.3)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" />
+
+    <input id="login-password" type="password" placeholder="Senha" style="
+      width:100%;padding:14px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);
+      background:rgba(255,255,255,0.05);color:#fff;font-size:14px;font-family:'DM Sans',sans-serif;
+      margin-bottom:24px;outline:none;transition:border-color 0.3s;
+    " onfocus="this.style.borderColor='rgba(0,229,255,0.3)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" />
+
+    <button id="login-btn" onclick="doLogin()" style="
+      width:100%;padding:14px;border-radius:12px;border:none;
+      background:linear-gradient(135deg,#00E5FF,#1E6FFF);color:#fff;
+      font-weight:700;font-size:15px;font-family:'DM Sans',sans-serif;
+      cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(0,229,255,0.2);
+    " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(0,229,255,0.3)'"
+       onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(0,229,255,0.2)'">
+      Entrar
+    </button>
+
+    <p style="color:rgba(255,255,255,0.25);font-size:11px;margin-top:24px;">Acesso restrito a administradores</p>
+  </div>
+</div>
+
 <!-- Loading overlay -->
-<div id="loading-overlay">
+<div id="loading-overlay" style="display:none;">
   <div class="spinner"></div>
   <div style="color:#fff;font-size:14px;font-family:'DM Sans',sans-serif;">Carregando Arcade Hub...</div>
 </div>
@@ -287,7 +331,7 @@
 <div id="toast"></div>
 
 <!-- Sidebar -->
-<div id="sidebar">
+<div id="sidebar" style="display:none;">
   <div class="nav-logo">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
       <img src="../logo.png" alt="Arcade Hub" style="width:36px;height:36px;object-fit:contain;border-radius:6px;" />
@@ -310,11 +354,33 @@
     <button class="nav-item" id="nav-empresas" onclick="showTab('empresas',this)">🏢 Visão Geral</button>
     <div id="nav-empresas-list"></div>
   </div>
-  <div class="nav-footer">Versão 2.0 · 2025</div>
+  <!-- Email & Logout -->
+  <div style="padding:10px 16px;border-top:1px solid rgba(255,255,255,0.07);">
+    <a href="https://mail.hostinger.com" target="_blank" rel="noopener" style="
+      display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;
+      background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.15);
+      border-radius:8px;color:#00E5FF;text-decoration:none;font-size:12px;font-weight:600;
+      transition:all 0.2s;margin-bottom:8px;
+    " onmouseover="this.style.background='rgba(0,229,255,0.15)'" onmouseout="this.style.background='rgba(0,229,255,0.08)'">
+      <span style="font-size:16px;">&#x2709;</span> Webmail
+    </a>
+    <button onclick="doLogout()" style="
+      display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;
+      background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);
+      border-radius:8px;color:#EF4444;font-size:12px;font-weight:600;
+      cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;
+    " onmouseover="this.style.background='rgba(239,68,68,0.15)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'">
+      <span style="font-size:16px;">&#x23FB;</span> Sair
+    </button>
+  </div>
+  <div class="nav-footer">
+    <div id="user-email-display" style="margin-bottom:4px;color:rgba(255,255,255,0.35);font-size:9px;word-break:break-all;"></div>
+    Versão 2.0 · 2025
+  </div>
 </div>
 
 <!-- Main content -->
-<div id="main">
+<div id="main" style="display:none;">
 
   <!-- PAINEL FINTECH -->
   <div id="tab-painel" class="tab-content active">
@@ -559,6 +625,72 @@
 const SUPABASE_URL = 'https://zdwgwpvlwqtsdgervcof.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpkd2d3cHZsd3F0c2RnZXJ2Y29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MjA5NzQsImV4cCI6MjA4ODM5Njk3NH0.t5dY0bFyfGh4dSeNRuy6XsmSWDUXN0Z3EMeRGGJMh98';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+async function checkAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    showDashboard(session.user);
+  }
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errorEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+
+  if (!email || !password) {
+    errorEl.textContent = 'Preencha email e senha.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  btn.textContent = 'Entrando...';
+  btn.disabled = true;
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    errorEl.textContent = 'Email ou senha incorretos.';
+    errorEl.style.display = 'block';
+    btn.textContent = 'Entrar';
+    btn.disabled = false;
+    return;
+  }
+
+  showDashboard(data.user);
+}
+
+function showDashboard(user) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('sidebar').style.display = 'flex';
+  document.getElementById('main').style.display = 'block';
+  document.getElementById('loading-overlay').style.display = 'flex';
+  document.getElementById('user-email-display').textContent = user.email;
+  initDashboard();
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('sidebar').style.display = 'none';
+  document.getElementById('main').style.display = 'none';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+// Enter key on password field
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('login-password').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doLogin();
+  });
+  document.getElementById('login-email').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('login-password').focus();
+  });
+  checkAuth();
+});
 
 const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 // Período operacional: início em 01/04/2025
@@ -1815,13 +1947,13 @@ function makeAllEditable() {
   });
 }
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
-(async () => {
+// ─── INIT (called after auth) ────────────────────────────────────────────────
+async function initDashboard() {
   await loadAll();
   document.getElementById('loading-overlay').style.display = 'none';
   renderAll();
-  toast('✅ Arcade Hub v2.0 carregado — 11 empresas ativas!');
-})();
+  toast('Arcade Hub v2.0 carregado — ' + COMPANIES.length + ' empresas ativas!');
+}
 </script>
 </body>
 </html>
